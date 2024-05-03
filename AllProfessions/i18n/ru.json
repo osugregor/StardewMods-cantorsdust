@@ -1,0 +1,9 @@
+{
+    /*********
+    ** Generic Mod Config Menu UI
+    *********/
+    "config.intro": "Выберите, какие профессии будут добавлены, когда вы достигните нужного уровня. Если у вас уже есть профессия, то она сама никуда не исчезнет (для удаления уже выученной профессии можно использовать мод \"CJB Cheats Menu\").",
+    "config.skill-level": "{{skillName}} уровень {{level}}",
+    //TODO
+    "config.toggle-skill.desc": "Whether to add {{professionName}} when you reach {{skillName}} level {{level}}."
+}
