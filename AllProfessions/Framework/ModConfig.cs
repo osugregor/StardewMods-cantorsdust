@@ -4,67 +4,66 @@ using System.Linq;
 using System.Runtime.Serialization;
 using StardewModdingAPI;
 
-namespace AllProfessions.Framework
+namespace AllProfessions.Framework;
+
+/// <summary>The mod configuration.</summary>
+internal class ModConfig
 {
-    /// <summary>The mod configuration.</summary>
-    internal class ModConfig
+    /*********
+    ** Accessors
+    *********/
+    /// <summary>The profession names or IDs which shouldn't be added.</summary>
+    public HashSet<string> IgnoreProfessions { get; set; } = new();
+
+
+    /*********
+    ** Public methods
+    *********/
+    /// <summary>Whether a given profession shouldn't be added automatically.</summary>
+    /// <param name="profession">The profession to check.</param>
+    public bool ShouldIgnore(Profession profession)
     {
-        /*********
-        ** Accessors
-        *********/
-        /// <summary>The profession names or IDs which shouldn't be added.</summary>
-        public HashSet<string> IgnoreProfessions { get; set; } = new();
+        return
+            this.IgnoreProfessions.Contains(profession.ToString())
+            || this.IgnoreProfessions.Contains(((int)profession).ToString());
+    }
 
+    /// <summary>Normalize the configured profession values.</summary>
+    /// <returns>Returns whether any changes were made.</returns>
+    public bool Normalize(IMonitor monitor)
+    {
+        bool changed = false;
 
-        /*********
-        ** Public methods
-        *********/
-        /// <summary>Whether a given profession shouldn't be added automatically.</summary>
-        /// <param name="profession">The profession to check.</param>
-        public bool ShouldIgnore(Profession profession)
+        foreach (string raw in this.IgnoreProfessions.ToArray())
         {
-            return
-                this.IgnoreProfessions.Contains(profession.ToString())
-                || this.IgnoreProfessions.Contains(((int)profession).ToString());
-        }
-
-        /// <summary>Normalize the configured profession values.</summary>
-        /// <returns>Returns whether any changes were made.</returns>
-        public bool Normalize(IMonitor monitor)
-        {
-            bool changed = false;
-
-            foreach (string raw in this.IgnoreProfessions.ToArray())
+            if (!Enum.TryParse(raw, ignoreCase: true, out Profession profession))
             {
-                if (!Enum.TryParse(raw, ignoreCase: true, out Profession profession))
-                {
-                    monitor.Log($"Ignored unknown profession name '{raw}' in the mod configuration.");
-                    this.IgnoreProfessions.Remove(raw);
-                    changed = true;
-                    continue;
-                }
-
-                if (profession.ToString() != raw)
-                {
-                    this.IgnoreProfessions.Remove(raw);
-                    this.IgnoreProfessions.Add(profession.ToString());
-                    changed = true;
-                }
+                monitor.Log($"Ignored unknown profession name '{raw}' in the mod configuration.");
+                this.IgnoreProfessions.Remove(raw);
+                changed = true;
+                continue;
             }
 
-            return changed;
+            if (profession.ToString() != raw)
+            {
+                this.IgnoreProfessions.Remove(raw);
+                this.IgnoreProfessions.Add(profession.ToString());
+                changed = true;
+            }
         }
 
+        return changed;
+    }
 
-        /*********
-        ** Private methods
-        *********/
-        /// <summary>The method called after the config file is deserialized.</summary>
-        /// <param name="context">The deserialization context.</param>
-        [OnDeserialized]
-        private void OnDeserializedMethod(StreamingContext context)
-        {
-            this.IgnoreProfessions = new(this.IgnoreProfessions ?? new(), StringComparer.OrdinalIgnoreCase);
-        }
+
+    /*********
+    ** Private methods
+    *********/
+    /// <summary>The method called after the config file is deserialized.</summary>
+    /// <param name="context">The deserialization context.</param>
+    [OnDeserialized]
+    private void OnDeserializedMethod(StreamingContext context)
+    {
+        this.IgnoreProfessions = new(this.IgnoreProfessions ?? new(), StringComparer.OrdinalIgnoreCase);
     }
 }
