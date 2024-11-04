@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>2.7.7</Version>
-    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,5 +9,4 @@
   </ItemGroup>
 
   <Import Project="..\_Common\_Common.projitems" Label="Shared" />
-  <Import Project="..\common.targets" />
 </Project>
