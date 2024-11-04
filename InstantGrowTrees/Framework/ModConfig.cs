@@ -1,15 +1,14 @@
-namespace InstantGrowTrees.Framework
-{
-    /// <summary>The mod configuration model.</summary>
-    internal class ModConfig
-    {
-        /*********
-        ** Accessors
-        *********/
-        /// <summary>The configuration for fruit trees.</summary>
-        public FruitTreeConfig FruitTrees { get; set; } = new();
+namespace InstantGrowTrees.Framework;
 
-        /// <summary>The configuration for non-fruit trees.</summary>
-        public RegularTreeConfig NonFruitTrees { get; set; } = new();
-    }
+/// <summary>The mod configuration model.</summary>
+internal class ModConfig
+{
+    /*********
+    ** Accessors
+    *********/
+    /// <summary>The configuration for fruit trees.</summary>
+    public FruitTreeConfig FruitTrees { get; set; } = new();
+
+    /// <summary>The configuration for non-fruit trees.</summary>
+    public RegularTreeConfig NonFruitTrees { get; set; } = new();
 }

@@ -1,6 +1,12 @@
 ﻿﻿[← back to readme](README.md)
 
 # Release notes
+## 1.8.6
+Released 04 November 2024 for SMAPI 4.1.0 or later. Updated by Pathoschild.
+
+* Updated for Stardew Valley 1.6.9.
+* Improved translations. Thanks to StephHoel (added Portuguese)!
+
 ## 1.8.5
 Released 19 March 2024 for SMAPI 4.0.0 or later. Updated by Pathoschild.
 
