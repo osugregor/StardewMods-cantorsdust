@@ -1,0 +1,8 @@
+{
+    /*********
+    ** Generic Mod Config Menu UI
+    *********/
+    "config.intro": "必要なレベルに達したときに追加される職業を選ぶ。\nすでに職業を持っている場合、その職業を遡ってに削除することはできません。\n(CJB Cheats Menuを使えば削除は可能)。",
+    "config.skill-level": "{{skillName}}レベル{{level}}",
+    "config.toggle-skill.desc": "{{skillName}}が{{level}}レベルに達したときに{{professionName}}を有効にする。"
+}
