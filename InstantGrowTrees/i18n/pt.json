@@ -3,22 +3,22 @@
     ** Generic Mod Config Menu UI
     *********/
     // fruit trees section
-    "config.fruit-trees": "Fruit trees",
-    "config.fruit-trees.instantly-age.name": "Instantly age",
-    "config.fruit-trees.instantly-age.desc": "Whether fruit trees instantly age to iridium quality.",
-    "config.fruit-trees.instantly-grow.name": "Instantly grow",
-    "config.fruit-trees.instantly-grow.desc": "Whether fruit trees grow instantly overnight.",
-    "config.fruit-trees.instantly-grow-in-winter.name": "Instantly grow in winter",
-    "config.fruit-trees.instantly-grow-in-winter.desc": "Whether fruit trees grow instantly in winter (if 'instantly grow' is also true).",
-    "config.fruit-trees.instantly-grow-when-invalid.name": "Instantly grow when invalid",
-    "config.fruit-trees.instantly-grow-when-invalid.desc": "Whether fruit trees grow instantly even if they'd normally not grow (e.g. too close to another tree).",
+    "config.fruit-trees": "Árvores frutíferas",
+    "config.fruit-trees.instantly-age.name": "Envelhecer instantaneamente",
+    "config.fruit-trees.instantly-age.desc": "Se as árvores frutíferas envelhecem instantaneamente até atingirem a qualidade do irídio.",
+    "config.fruit-trees.instantly-grow.name": "Crescer instantaneamente",
+    "config.fruit-trees.instantly-grow.desc": "Se as árvores frutíferas crescem instantaneamente durante a noite.",
+    "config.fruit-trees.instantly-grow-in-winter.name": "Crescer instantaneamente no inverno",
+    "config.fruit-trees.instantly-grow-in-winter.desc": "Se as árvores frutíferas crescem instantaneamente no inverno (se 'Crescer instantaneamente' estiver ativado).",
+    "config.fruit-trees.instantly-grow-when-invalid.name": "Forçar crescer instantaneamente",
+    "config.fruit-trees.instantly-grow-when-invalid.desc": "Se as árvores frutíferas crescem instantaneamente mesmo que normalmente não cresçam (por exemplo, muito perto de outra árvore).",
 
     // non-fruit trees section
-    "config.trees": "Non-fruit trees",
-    "config.trees.instantly-grow.name": "Instantly grow",
-    "config.trees.instantly-grow.desc": "Whether non-fruit trees grow instantly overnight.",
-    "config.trees.instantly-grow-in-winter.name": "Instantly grow in winter",
-    "config.trees.instantly-grow-in-winter.desc": "Whether non-fruit trees grow instantly in winter (if 'instantly grow' is also true).",
-    "config.trees.instantly-grow-when-invalid.name": "Instantly grow when invalid",
-    "config.trees.instantly-grow-when-invalid.desc": "Whether non-fruit trees grow instantly even if they'd normally not grow (e.g. too close to another tree)."
+    "config.trees": "Árvores não frutíferas",
+    "config.trees.instantly-grow.name": "Crescer instantaneamente",
+    "config.trees.instantly-grow.desc": "Se as árvores não frutíferas crescem instantaneamente durante a noite.",
+    "config.trees.instantly-grow-in-winter.name": "Crescer instantaneamente no inverno",
+    "config.trees.instantly-grow-in-winter.desc": "Se as árvores não frutíferas crescem instantaneamente no inverno (se 'Crescer instantaneamente' estiver ativado).",
+    "config.trees.instantly-grow-when-invalid.name": "Forçar crescer instantaneamente",
+    "config.trees.instantly-grow-when-invalid.desc": "Se as árvores não frutíferas crescem instantaneamente mesmo que normalmente não cresçam (por exemplo, muito perto de outra árvore)."
 }
