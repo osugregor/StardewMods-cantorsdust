@@ -1,6 +1,11 @@
 ﻿﻿[← back to readme](README.md)
 
 # Release notes
+## 2.7.9
+Released 04 November 2024 for SMAPI 4.1.2 or later. Updated by Pathoschild.
+
+* Fixed the previous update being broken on Linux/macOS.
+
 ## 2.7.8
 Released 04 November 2024 for SMAPI 4.1.0 or later. Updated by Pathoschild.
 
