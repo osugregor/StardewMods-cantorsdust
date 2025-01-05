@@ -373,11 +373,12 @@ internal class ModEntry : Mod
     }
 
     /// <summary>Get the adjusted progress towards the next 10-game-minute tick.</summary>
-    /// <param name="progress">The current progress.</param>
-    /// <param name="newTickInterval">The new tick interval.</param>
+    /// <param name="progress">The percentage of the clock tick interval (i.e. the interval between time changes) that elapsed since the last update tick.</param>
+    /// <param name="newTickInterval">The clock tick interval to which to apply the progress.</param>
     private double ScaleTickProgress(double progress, int newTickInterval)
     {
-        return progress * this.TimeHelper.CurrentDefaultTickInterval / newTickInterval;
+        double ratio = this.TimeHelper.CurrentDefaultTickInterval / (newTickInterval * 1d); // ratio between the game's normal interval (e.g. 7000) and the player's custom interval
+        return progress * ratio;
     }
 
     /// <summary>Get the freeze type which applies for the current context, ignoring overrides by the player.</summary>

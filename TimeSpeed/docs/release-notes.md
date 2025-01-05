@@ -1,6 +1,9 @@
 ﻿﻿[← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Fixed edge cases like very slow time speeds causing time to stop instead.
+
 ## 2.7.9
 Released 04 November 2024 for SMAPI 4.1.2 or later. Updated by Pathoschild.
 
