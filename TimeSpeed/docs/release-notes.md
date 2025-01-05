@@ -3,6 +3,7 @@
 # Release notes
 ## Upcoming release
 * Fixed edge cases like very slow time speeds causing time to stop instead.
+* Added verbose-only logs to monitor how the mod is changing time.
 
 ## 2.7.9
 Released 04 November 2024 for SMAPI 4.1.2 or later. Updated by Pathoschild.

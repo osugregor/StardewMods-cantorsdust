@@ -182,6 +182,21 @@ internal class ModEntry : Mod
             return;
 
         this.TimeHelper.Update();
+
+        if (e.IsOneSecond && this.Monitor.IsVerbose)
+        {
+            string timeFrozenLabel;
+            if (this.ManualFreeze is true)
+                timeFrozenLabel = ", frozen manually";
+            else if (this.ManualFreeze is false)
+                timeFrozenLabel = ", resumed manually";
+            else if (this.IsTimeFrozen)
+                timeFrozenLabel = $", frozen per {this.AutoFreeze}";
+            else
+                timeFrozenLabel = null;
+
+            this.Monitor.Log($"Time is {Game1.timeOfDay}; {this.TimeHelper.TickProgress:P} towards {Utility.ModifyTime(Game1.timeOfDay, 10)} (tick interval: {this.TimeHelper.CurrentDefaultTickInterval}, {this.TickInterval / 10_000m:0.##}s/min{timeFrozenLabel})");
+        }
     }
 
     /// <summary>Raised after the <see cref="Framework.TimeHelper.TickProgress"/> value changes.</summary>
