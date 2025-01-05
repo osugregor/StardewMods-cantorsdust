@@ -83,8 +83,16 @@ internal class ModEntry : Mod
         GenericModConfigMenuIntegration.Register(this.ModManifest, this.Helper.ModRegistry, this.Monitor,
             getConfig: () => this.Config,
             reset: () => this.Config = new(),
-            save: () => this.Helper.WriteConfig(this.Config)
+            save: this.OnConfigChanged
         );
+    }
+
+    /// <summary>Update when the mod settings are changed through Generic Mod Config Menu.</summary>
+    private void OnConfigChanged()
+    {
+        this.Helper.WriteConfig(this.Config);
+
+        this.Helper.GameContent.InvalidateCache("Data/Locations");
     }
 
     /// <inheritdoc cref="IInputEvents.ButtonsChanged"/>

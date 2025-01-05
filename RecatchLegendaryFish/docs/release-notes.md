@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+* Fixed legendary fish not updated immediately when you toggle settings through Generic Mod Config Menu.
 * Improved translations. Thanks to CNSCZJ (added Chinese)!
 
 ## 1.8.7
