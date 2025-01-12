@@ -12,6 +12,10 @@ internal class TimeHelper
     /// <summary>The previous tick progress.</summary>
     private double PreviousProgress;
 
+    /// <summary>The remainder after applying the progress to the <see cref="Game1.gameTimeInterval"/>.</summary>
+    /// <remarks>This avoids an issue where very slow time ticks will stop time instead, due to the value getting truncated to the integer value.</remarks>
+    private double CurrentProgressRemainder;
+
     /// <summary>The handlers to notify when the tick progress changes.</summary>
     private event EventHandler<TickProgressChangedEventArgs> Handlers;
 
@@ -26,7 +30,13 @@ internal class TimeHelper
     public double TickProgress
     {
         get => (double)Game1.gameTimeInterval / this.CurrentDefaultTickInterval;
-        set => Game1.gameTimeInterval = (int)(value * this.CurrentDefaultTickInterval);
+        set
+        {
+            double newInterval = (value + this.CurrentProgressRemainder) * this.CurrentDefaultTickInterval;
+            Game1.gameTimeInterval = (int)newInterval;
+
+            this.CurrentProgressRemainder = (newInterval % 1) / this.CurrentDefaultTickInterval;
+        }
     }
 
 

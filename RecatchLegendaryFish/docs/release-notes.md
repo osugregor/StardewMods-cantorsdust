@@ -1,6 +1,12 @@
 ﻿﻿[← back to readme](README.md)
 
 # Release notes
+## 1.8.8
+Released 11 January 2025 for SMAPI 4.1.10 or later. Updated by Pathoschild.
+
+* Fixed legendary fish not updated immediately when you toggle settings through Generic Mod Config Menu.
+* Improved translations. Thanks to CNSCZJ (added Chinese)!
+
 ## 1.8.7
 Released 04 November 2024 for SMAPI 4.1.2 or later. Updated by Pathoschild.
 

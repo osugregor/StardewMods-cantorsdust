@@ -182,6 +182,21 @@ internal class ModEntry : Mod
             return;
 
         this.TimeHelper.Update();
+
+        if (e.IsOneSecond && this.Monitor.IsVerbose)
+        {
+            string timeFrozenLabel;
+            if (this.ManualFreeze is true)
+                timeFrozenLabel = ", frozen manually";
+            else if (this.ManualFreeze is false)
+                timeFrozenLabel = ", resumed manually";
+            else if (this.IsTimeFrozen)
+                timeFrozenLabel = $", frozen per {this.AutoFreeze}";
+            else
+                timeFrozenLabel = null;
+
+            this.Monitor.Log($"Time is {Game1.timeOfDay}; {this.TimeHelper.TickProgress:P} towards {Utility.ModifyTime(Game1.timeOfDay, 10)} (tick interval: {this.TimeHelper.CurrentDefaultTickInterval}, {this.TickInterval / 10_000m:0.##}s/min{timeFrozenLabel})");
+        }
     }
 
     /// <summary>Raised after the <see cref="Framework.TimeHelper.TickProgress"/> value changes.</summary>
@@ -272,7 +287,7 @@ internal class ModEntry : Mod
         this.Notifier.QuickNotify(
             I18n.Message_SpeedChanged(seconds: this.TickInterval / 1000)
         );
-        this.Monitor.Log($"Tick length set to {this.TickInterval / 1000d: 0.##} seconds.", LogLevel.Info);
+        this.Monitor.Log($"Tick length set to {this.TickInterval / 1000d:0.##} seconds.", LogLevel.Info);
     }
 
     /// <summary>Toggle whether time is frozen.</summary>
@@ -373,11 +388,12 @@ internal class ModEntry : Mod
     }
 
     /// <summary>Get the adjusted progress towards the next 10-game-minute tick.</summary>
-    /// <param name="progress">The current progress.</param>
-    /// <param name="newTickInterval">The new tick interval.</param>
+    /// <param name="progress">The percentage of the clock tick interval (i.e. the interval between time changes) that elapsed since the last update tick.</param>
+    /// <param name="newTickInterval">The clock tick interval to which to apply the progress.</param>
     private double ScaleTickProgress(double progress, int newTickInterval)
     {
-        return progress * this.TimeHelper.CurrentDefaultTickInterval / newTickInterval;
+        double ratio = this.TimeHelper.CurrentDefaultTickInterval / (newTickInterval * 1d); // ratio between the game's normal interval (e.g. 7000) and the player's custom interval
+        return progress * ratio;
     }
 
     /// <summary>Get the freeze type which applies for the current context, ignoring overrides by the player.</summary>
