@@ -3,6 +3,7 @@
 # Release notes
 ## Upcoming release
 * Fixed edge cases like very slow time speeds causing time to stop instead.
+* Fixed extra space in 'tick length set to' logs.
 * Added verbose-only logs to monitor how the mod is changing time.
 * Improved translations. Thanks to TwelveYO21 (added Japanese)!
 

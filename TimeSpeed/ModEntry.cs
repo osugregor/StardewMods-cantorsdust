@@ -287,7 +287,7 @@ internal class ModEntry : Mod
         this.Notifier.QuickNotify(
             I18n.Message_SpeedChanged(seconds: this.TickInterval / 1000)
         );
-        this.Monitor.Log($"Tick length set to {this.TickInterval / 1000d: 0.##} seconds.", LogLevel.Info);
+        this.Monitor.Log($"Tick length set to {this.TickInterval / 1000d:0.##} seconds.", LogLevel.Info);
     }
 
     /// <summary>Toggle whether time is frozen.</summary>
