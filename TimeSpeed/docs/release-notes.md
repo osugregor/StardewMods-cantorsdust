@@ -1,7 +1,9 @@
 ﻿﻿[← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 2.7.10
+Released 11 January 2025 for SMAPI 4.1.10 or later. Updated by Pathoschild.
+
 * Fixed edge cases like very slow time speeds causing time to stop instead.
 * Fixed extra space in 'tick length set to' logs.
 * Added verbose-only logs to monitor how the mod is changing time.
