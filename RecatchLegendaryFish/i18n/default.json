@@ -1,15 +1,15 @@
 ﻿{
     /*********
-    ** In-game messages (游戏内消息)
+    ** In-game messages
     *********/
-    "message.enabled": "你现在可以重新捕捉传说鱼了. 按 {{key}} 可禁用功能.",
-    "message.disabled": "你现在无法再次捕捉传说鱼了. 按 {{key}} 可启用功能.",
+    "message.enabled": "You can now recatch legendary fish. Press {{key}} again to disable it.",
+    "message.disabled": "You can no longer recatch legendary fish. Press {{key}} again to enable it.",
 
 
     /*********
-    ** Generic Mod Config Menu UI (通用模组管理界面)
+    ** Generic Mod Config Menu UI
     *********/
-    "config.controls": "控制",
-    "config.toggle-key.name": "快捷键",
-    "config.toggle-key.desc": "一个快捷按键绑定.切换是否可以重新捕捉传说鱼功能."
+    "config.controls": "Controls",
+    "config.toggle-key.name": "Toggle key",
+    "config.toggle-key.desc": "A keybind which toggles whether you can recatch legendary fish."
 }
