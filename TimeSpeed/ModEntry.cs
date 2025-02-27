@@ -15,7 +15,7 @@ internal class ModEntry : Mod
     ** Properties
     *********/
     /// <summary>Displays messages to the user.</summary>
-    private readonly Notifier Notifier = new();
+    private Notifier Notifier;
 
     /// <summary>Provides helper methods for tracking time flow.</summary>
     private readonly TimeHelper TimeHelper = new();
@@ -33,6 +33,10 @@ internal class ModEntry : Mod
     private bool IsTimeFrozen =>
         this.ManualFreeze == true
         || (this.AutoFreeze != AutoFreezeReason.None && this.ManualFreeze != false);
+
+
+    /// <summary>Get whether time features should be enabled.</summary>
+    private bool IsWorldReadyAndHost => Context.IsWorldReady && Context.IsMainPlayer;
 
     /// <summary>Whether the flow of time should be adjusted.</summary>
     private bool AdjustTime;
@@ -59,6 +63,7 @@ internal class ModEntry : Mod
 
         // read config
         this.Config = helper.ReadConfig<ModConfig>();
+        this.Notifier = new Notifier(this.Helper, this.ModManifest);
 
         // add time events
         this.TimeHelper.WhenTickProgressChanged(this.OnTickProgressed);
@@ -69,6 +74,7 @@ internal class ModEntry : Mod
         helper.Events.GameLoop.DayStarted += this.OnDayStarted;
         helper.Events.Input.ButtonsChanged += this.OnButtonsChanged;
         helper.Events.Player.Warped += this.OnWarped;
+        helper.Events.Multiplayer.ModMessageReceived += this.OnModMessageReceived;
 
         // add time freeze/unfreeze notification
         {
@@ -99,16 +105,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
     {
-        GenericModConfigMenuIntegration.Register(this.ModManifest, this.Helper.ModRegistry, this.Monitor,
-            getConfig: () => this.Config,
-            reset: () => this.Config = new(),
-            save: () =>
-            {
-                this.Helper.WriteConfig(this.Config);
-                if (Context.IsWorldReady && this.ShouldEnable())
-                    this.UpdateSettingsForLocation(Game1.currentLocation);
-            }
-        );
+        this.RenderGenericModConfigMenu();
     }
 
     /// <inheritdoc cref="IGameLoopEvents.SaveLoaded"/>
@@ -116,8 +113,30 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
     {
-        if (!Context.IsMainPlayer)
-            this.Monitor.Log("Disabled mod; only works for the main player in multiplayer.", LogLevel.Warn);
+        this.RenderGenericModConfigMenu();
+    }
+
+    /// <summary>Handles incoming commands from other farmhands wanting to control time.</summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnModMessageReceived(object sender, ModMessageReceivedEventArgs e)
+    {
+        if (e.FromModID == this.ModManifest.UniqueID)
+        {
+            // Messages for the host
+            if (Context.IsMainPlayer)
+            {
+                if (e.Type == MessageType.ToggleFreeze) this.ToggleFreeze();
+                else if (e.Type == MessageType.IncreaseTickInterval) this.ChangeTickInterval(true, e.ReadAs<int>());
+                else if (e.Type == MessageType.DecreaseTickInterval) this.ChangeTickInterval(false, e.ReadAs<int>());
+            }
+            // Messages for the farmhands
+            else
+            {
+                if (e.Type == MessageType.QuickNotify) this.Notifier.QuickNotify(e.ReadAs<string>());
+                else if (e.Type == MessageType.ShortNotify) this.Notifier.ShortNotify(e.ReadAs<string>());
+            }
+        }
     }
 
     /// <inheritdoc cref="IGameLoopEvents.DayStarted"/>
@@ -125,7 +144,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnDayStarted(object sender, DayStartedEventArgs e)
     {
-        if (!this.ShouldEnable())
+        if (!this.IsWorldReadyAndHost)
             return;
 
         this.UpdateScaleForDay(Game1.season, Game1.dayOfMonth);
@@ -138,9 +157,12 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnButtonsChanged(object sender, ButtonsChangedEventArgs e)
     {
-        if (!this.ShouldEnable(forInput: true))
+        // Verify we should be checking user input
+        if (!Context.IsWorldReady // World not loaded
+            || (!Context.IsPlayerFree && !Game1.eventUp) // player not free (except events)
+            || Game1.keyboardDispatcher.Subscriber is not null) // textbox active
             return;
-
+        
         if (this.Config.Keys.FreezeTime.JustPressed())
             this.ToggleFreeze();
         else if (this.Config.Keys.IncreaseTickInterval.JustPressed())
@@ -156,7 +178,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnWarped(object sender, WarpedEventArgs e)
     {
-        if (!this.ShouldEnable() || !e.IsLocalPlayer)
+        if (!this.IsWorldReadyAndHost || !e.IsLocalPlayer)
             return;
 
         this.UpdateSettingsForLocation(e.NewLocation);
@@ -167,7 +189,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnTimeChanged(object sender, TimeChangedEventArgs e)
     {
-        if (!this.ShouldEnable())
+        if (!this.IsWorldReadyAndHost)
             return;
 
         this.UpdateFreezeForTime();
@@ -178,7 +200,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
     {
-        if (!this.ShouldEnable())
+        if (!this.IsWorldReadyAndHost)
             return;
 
         this.TimeHelper.Update();
@@ -204,7 +226,7 @@ internal class ModEntry : Mod
     /// <param name="e">The event arguments.</param>
     private void OnTickProgressed(object sender, TickProgressChangedEventArgs e)
     {
-        if (!this.ShouldEnable())
+        if (!this.IsWorldReadyAndHost)
             return;
 
         if (this.IsTimeFrozen)
@@ -226,28 +248,6 @@ internal class ModEntry : Mod
     /****
     ** Methods
     ****/
-    /// <summary>Get whether time features should be enabled.</summary>
-    /// <param name="forInput">Whether to check for input handling.</param>
-    private bool ShouldEnable(bool forInput = false)
-    {
-        // is loaded and host player (farmhands can't change time)
-        if (!Context.IsWorldReady || !Context.IsMainPlayer)
-            return false;
-
-        // check restrictions for input
-        if (forInput)
-        {
-            // don't handle input when player isn't free (except in events)
-            if (!Context.IsPlayerFree && !Game1.eventUp)
-                return false;
-
-            // ignore input if a textbox is active
-            if (Game1.keyboardDispatcher.Subscriber is not null)
-                return false;
-        }
-
-        return true;
-    }
 
     /// <summary>Reload <see cref="Config"/> from the config file.</summary>
     private void ReloadConfig()
@@ -258,13 +258,29 @@ internal class ModEntry : Mod
         this.Notifier.ShortNotify(I18n.Message_ConfigReloaded());
     }
 
+    /// <summary>Register Generic Mod Config Menu</summary>
+    private void RenderGenericModConfigMenu()
+    {
+        GenericModConfigMenuIntegration.Register(this.ModManifest, this.Helper.ModRegistry, this.Monitor,
+            getConfig: () => this.Config,
+            reset: () => this.Config = new(),
+            save: () => {
+                this.Helper.WriteConfig(this.Config);
+                if (this.IsWorldReadyAndHost)
+                    this.UpdateSettingsForLocation(Game1.currentLocation);
+            }
+        );
+    }
+
+
     /// <summary>Increment or decrement the tick interval, taking into account the held modifier key if applicable.</summary>
     /// <param name="increase">Whether to increment the tick interval; else decrement.</param>
-    private void ChangeTickInterval(bool increase)
+    private void ChangeTickInterval(bool increase, int change = 0)
     {
-        // get offset to apply
-        int change = 1000;
+        // If no change specific or 0, we get the defaults
+        if (change == 0)
         {
+            change = 1000;
             KeyboardState state = Keyboard.GetState();
             if (state.IsKeyDown(Keys.LeftControl))
                 change *= 100;
@@ -272,6 +288,13 @@ internal class ModEntry : Mod
                 change *= 10;
             else if (state.IsKeyDown(Keys.LeftAlt))
                 change /= 10;
+        }
+
+        // If not the host, notify the host to change the tick interval
+        if (!Context.IsMainPlayer)
+        {
+            this.Helper.Multiplayer.SendMessage(change, MessageType.TickInterval(increase), modIDs: [this.ModManifest.UniqueID]);
+            return;
         }
 
         // update tick interval
@@ -293,6 +316,13 @@ internal class ModEntry : Mod
     /// <summary>Toggle whether time is frozen.</summary>
     private void ToggleFreeze()
     {
+        // If not the host, notify the server to ToggleFreeze
+        if (!Context.IsMainPlayer)
+        {
+            this.Helper.Multiplayer.SendMessage("Toggle server freeze.", MessageType.ToggleFreeze, modIDs: new[] { this.ModManifest.UniqueID });
+            return;
+        }
+
         if (!this.IsTimeFrozen)
         {
             this.UpdateTimeFreeze(manualOverride: true);
@@ -302,7 +332,7 @@ internal class ModEntry : Mod
         else
         {
             this.UpdateTimeFreeze(manualOverride: false);
-            this.Notifier.QuickNotify(I18n.Message_TimeResumed());
+             this.Notifier.QuickNotify(I18n.Message_TimeResumed());
             this.Monitor.Log($"Time is resumed at \"{Game1.currentLocation.Name}\".", LogLevel.Info);
         }
     }

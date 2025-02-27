@@ -5,7 +5,7 @@
     // changed manually
     "message.config-reloaded": "Теперь время идёт по другому...",
     "message.speed-changed": "10 минут ощущаються как {{seconds}} сек.",
-    "message.time-stopped": "Ты остановил время!",
+    "message.time-stopped": "Время остановилось...",
     "message.time-resumed": "Теперь время ощущается нормально...",
 
     // changed based on time
@@ -20,6 +20,9 @@
     /*********
     ** Generic Mod Config Menu UI
     *********/
+    // global descriptions
+    "config.farmhand-info.desc": "Вы загружаетесь в текущее сохранение как батрак. Параметры хоста были удалены.",
+
     // general options
     "config.general-options": "Основные опции",
     "config.enable-on-festival-days.name": "Вкл. во время праздников",

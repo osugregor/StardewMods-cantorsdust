@@ -5,7 +5,7 @@
     // changed manually
     "message.config-reloaded": "Ora il tempo è cambiato...",
     "message.speed-changed": "10 minuti sembrano {{seconds}} secondi",
-    "message.time-stopped": "Hey, hai fermato il tempo!",
+    "message.time-stopped": "Il tempo si è fermato...",
     "message.time-resumed": "Ora Il tempo è come sempre...",
 
     // changed based on time
@@ -20,6 +20,9 @@
     /*********
     ** Generic Mod Config Menu UI
     *********/
+    // global descriptions
+    "config.farmhand-info.desc": "Verrai caricato nel salvataggio corrente come bracciante agricolo. Le opzioni host sono state rimosse.",
+
     // general options
     "config.general-options": "Opzioni generali",
     "config.enable-on-festival-days.name": "Attiva nei giorni dei festival",

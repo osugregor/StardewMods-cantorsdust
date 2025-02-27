@@ -5,7 +5,7 @@
     // changed manually
     "message.config-reloaded": "O tempo parece diferente agora...",
     "message.speed-changed": "10 minutos parecem como {{seconds}} segundos.",
-    "message.time-stopped": "Aí, você parou o tempo!",
+    "message.time-stopped": "O tempo parou...",
     "message.time-resumed": "O tempo parece normal agora...",
 
     // changed based on time
@@ -20,6 +20,9 @@
     /*********
     ** Generic Mod Config Menu UI
     *********/
+    // global descriptions
+    "config.farmhand-info.desc": "Você é carregado no salvamento atual como lavrador. As opções de host foram removidas.",
+
     // general options
     "config.general-options": "Opções Gerais",
     "config.enable-on-festival-days.name": "Ativar em dias de festival",

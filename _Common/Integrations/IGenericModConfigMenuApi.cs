@@ -20,6 +20,9 @@ public interface IGenericModConfigMenuApi
     /// <param name="titleScreenOnly">Whether the options can only be edited from the title screen.</param>
     void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
 
+    /// <summary>Remove a mod from the config UI and delete all its options and pages.</summary>
+    /// <param name="mod">The mod's manifest.</param>
+    void Unregister(IManifest mod);
 
     /****
     ** Basic options
